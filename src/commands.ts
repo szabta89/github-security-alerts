@@ -55,6 +55,18 @@ export async function registerCommands(context: ExtensionContext) {
     )
   );
 
+  context.subscriptions.push(
+    commands.registerCommand(
+      `github-security.detectAffectedCodeParts`,
+      async (node: DependabotAlertNode) => {
+        const availableCommands = await commands.getCommands(true);
+        const commandId = 'copilot-labs.detect-from-url';
+        if (availableCommands.includes(commandId)) {
+          commands.executeCommand(commandId, Uri.parse(node.alert.url));
+        }
+      })
+  );
+
   function viewAlertsInBrowser(suffix: string) {
     const url = `https://github.com/${store.repo!.owner}/${
       store.repo!.name
